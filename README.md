@@ -29,64 +29,39 @@ Hercules는 독립적인 라이브러리 모듈로 설계되었습니다.
 
 ```bash
 npm install
+npm run build
+npm link
 ```
 
 ---
 
-## 사용 가이드
+## 사용자 인터페이스 (Interfaces)
 
-Hercules의 파이프라인은 지식 추출, 패턴 학습, 문항 생성의 3단계로 구성됩니다.
+Hercules는 소스 코드를 수정하지 않고도 손쉽게 사용할 수 있도록 두 가지 인터페이스를 제공합니다.
 
-### 초기 설정
+### 1. CLI (Command Line Interface)
 
-API 키 및 사용할 언어 모델을 환경 설정 객체에 주입하여 라이브러리를 초기화합니다.
+터미널에서 명령어 한 줄로 쌍둥이 문항을 생성하고 JSON 형태로 추출할 수 있습니다.
 
-```typescript
-import { Hercules } from 'hercules';
+```bash
+# 기본 사용법
+hercules generate --textbook ./data/textbook.txt --exams ./data/2023_exam.pdf ./data/2024_exam.pdf --count 3 --out ./result.json
 
-const hercules = new Hercules({
-  apiKey: process.env.OPENAI_API_KEY || 'your-openai-api-key',
-  model: 'gpt-4o'
-});
+# 특정 함정 패턴 강제 적용
+hercules generate -t ./book.txt -e ./exam.pdf --traps "유사 개념 혼동" "조건 누락"
 ```
 
-### 1. 평가 대상 지식 추출
+### 2. Web UI (Next.js + shadcn/ui)
 
-원본 교과서 텍스트로부터 출제 가능한 지식 명제를 추출합니다.
+직관적인 웹 대시보드 환경에서 파일을 드래그 앤 드롭하고, 클릭만으로 문제를 생성하며 생성된 문항의 정답과 해설을 깔끔한 카드 형태로 열람할 수 있습니다.
 
-```typescript
-const textbookText = "..."; // 교과서 원문 내용
-const knowledge = await hercules.extractKnowledge(textbookText);
+```bash
+cd web
+npm install
+npm run dev
 ```
 
-### 2. 기출문제 패턴 학습
-
-과거 기출문제 자료를 입력합니다. 시스템은 PDF 파일을 자동으로 파싱 및 캐싱 처리한 후, 지문 단서 구조와 함정 패턴을 추출합니다. 정확도와 변별력을 극대화하기 위해 다량의 기출문제를 입력하는 것을 권장합니다.
-
-```typescript
-const patterns = await hercules.learnFromExams({
-  knowledge: knowledge,
-  pastExams: [
-    "/path/to/exam_2023.pdf", 
-    "/path/to/exam_2024.pdf"
-  ]
-});
-```
-
-### 3. 기출 복제 문항 생성
-
-이전 단계에서 학습한 특정 오답 유도 메커니즘을 적용하여 새로운 문항을 생성합니다.
-
-```typescript
-const generatedQuestions = await hercules.generateQuestions({
-  knowledge: knowledge,
-  patterns: patterns,
-  applyTraps: ["유사 개념 혼동", "조건 누락"], // 적용할 함정 패턴 지정
-  count: 3
-});
-
-console.log(JSON.stringify(generatedQuestions, null, 2));
-```
+브라우저에서 `http://localhost:3000`에 접속하여 화려하고 모던하게 구축된 Hercules Web Dashboard를 이용하세요.
 
 ---
 
@@ -96,6 +71,8 @@ console.log(JSON.stringify(generatedQuestions, null, 2));
 - `src/extractor/`: 교과서 원문 기반 지식 명제 도출 로직.
 - `src/analyzer/`: PDF 파싱 및 함정 패턴, 단서 서술 방식 분석 엔진.
 - `src/generator/`: 프롬프트 조립 및 최종 평가 문항 생성 엔진.
+- `bin/`: CLI 커맨드 모듈.
+- `web/`: Next.js 및 shadcn/ui 기반의 시각적 웹 프론트엔드/백엔드.
 - `.exam_cache/`: 파싱된 PDF 텍스트 결과물을 저장하는 로컬 캐시 디렉토리.
 
 ---

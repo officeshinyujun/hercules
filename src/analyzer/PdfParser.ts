@@ -29,7 +29,7 @@ export class PdfParser {
     }
 
     const dataBuffer = fs.readFileSync(pdfPath);
-    const data = await pdfParse(dataBuffer);
+    const data = await (pdfParse as any)(dataBuffer);
     
     fs.writeFileSync(cachePath, data.text, 'utf-8');
     return data.text;
