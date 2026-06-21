@@ -22,14 +22,16 @@ program
   .option('-o, --out <path>', 'Path to save output JSON file', 'result.json')
   .action(async (options) => {
     try {
-      const apiKey = process.env.OPENAI_API_KEY;
-      if (!apiKey) {
+      const apiKeyEnv = process.env.OPENAI_API_KEY;
+      if (!apiKeyEnv) {
         console.error('Error: OPENAI_API_KEY environment variable is not set.');
         process.exit(1);
       }
+      
+      const apiKeys = apiKeyEnv.split(',').map(k => k.trim()).filter(k => k.length > 0);
 
       console.log('Initialize Hercules...');
-      const hercules = new Hercules({ apiKey, model: 'gpt-4o' });
+      const hercules = new Hercules({ apiKeys, model: 'gpt-4o' });
 
       console.log(`Reading textbook from: ${options.textbook}`);
       const textbookText = fs.readFileSync(path.resolve(options.textbook), 'utf-8');

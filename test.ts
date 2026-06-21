@@ -2,7 +2,7 @@ import { Hercules } from './src/index';
 
 async function main() {
   const hercules = new Hercules({
-    apiKey: process.env.OPENAI_API_KEY || 'dummy_key',
+    apiKeys: (process.env.OPENAI_API_KEY || 'dummy_key').split(','),
     model: 'gpt-4o-mini'
   });
 

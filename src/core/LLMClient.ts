@@ -2,16 +2,27 @@ import OpenAI from 'openai';
 import { HerculesConfig } from './config';
 
 export class LLMClient {
-  private openai: OpenAI;
+  private clients: OpenAI[];
   private model: string;
+  private currentIndex: number = 0;
 
   constructor(config: HerculesConfig) {
-    this.openai = new OpenAI({ apiKey: config.apiKey });
+    if (!config.apiKeys || config.apiKeys.length === 0) {
+      throw new Error("At least one API key is required.");
+    }
+    this.clients = config.apiKeys.map(key => new OpenAI({ apiKey: key.trim() }));
     this.model = config.model || 'gpt-4o';
   }
 
+  private getNextClient(): OpenAI {
+    const client = this.clients[this.currentIndex];
+    this.currentIndex = (this.currentIndex + 1) % this.clients.length;
+    return client;
+  }
+
   async generateJson<T>(messages: OpenAI.Chat.ChatCompletionMessageParam[]): Promise<T> {
-    const response = await this.openai.chat.completions.create({
+    const client = this.getNextClient();
+    const response = await client.chat.completions.create({
       model: this.model,
       messages,
       response_format: { type: 'json_object' },

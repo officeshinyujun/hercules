@@ -1,4 +1,4 @@
 export interface HerculesConfig {
-  apiKey: string;
+  apiKeys: string[];
   model?: string;
 }

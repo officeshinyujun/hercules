@@ -88,15 +88,15 @@ export default function Home() {
             <Card className="shadow-sm border-slate-200">
               <CardHeader className="pb-4">
                 <CardTitle>1. 설정 (Settings)</CardTitle>
-                <CardDescription>OpenAI API 키를 입력하세요.</CardDescription>
+                <CardDescription>OpenAI API 키를 입력하세요. 여러 개인 경우 쉼표(,)로 구분하면 라운드로빈 방식으로 작동하여 효율이 극대화됩니다.</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Label htmlFor="apiKey">OpenAI API Key</Label>
+                  <Label htmlFor="apiKey">OpenAI API Key(s)</Label>
                   <Input 
                     id="apiKey" 
                     type="password" 
-                    placeholder="sk-..." 
+                    placeholder="sk-..., sk-..." 
                     value={apiKey} 
                     onChange={e => setApiKey(e.target.value)}
                   />

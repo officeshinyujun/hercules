@@ -7,19 +7,20 @@ import os from 'os';
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const apiKey = formData.get('apiKey') as string;
+    const apiKeyString = formData.get('apiKey') as string;
     const textbookText = formData.get('textbookText') as string;
     const countStr = formData.get('count') as string;
     const applyTraps = formData.getAll('applyTraps') as string[];
     
-    if (!apiKey || !textbookText) {
+    if (!apiKeyString || !textbookText) {
       return NextResponse.json({ error: 'Missing apiKey or textbookText' }, { status: 400 });
     }
 
+    const apiKeys = apiKeyString.split(',').map(k => k.trim()).filter(k => k.length > 0);
     const count = countStr ? parseInt(countStr, 10) : 1;
     const files = formData.getAll('exams') as File[];
 
-    const hercules = new Hercules({ apiKey, model: 'gpt-4o' });
+    const hercules = new Hercules({ apiKeys, model: 'gpt-4o' });
 
     // Save uploaded files to temp dir
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hercules-'));
