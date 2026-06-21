@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.exam_cache/
+.env
+.DS_Store
