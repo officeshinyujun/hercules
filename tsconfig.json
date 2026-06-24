@@ -3,13 +3,14 @@
     "target": "es2022",
     "module": "commonjs",
     "moduleResolution": "node",
-    "ignoreDeprecations": "5.0", "ignoreDeprecations": "6.0",
-    "ignoreDeprecations": "5.0", "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
+    "declaration": true,
+    "declarationMap": true,
     "outDir": "./dist"
   },
   "include": ["src/**/*", "bin/**/*"]

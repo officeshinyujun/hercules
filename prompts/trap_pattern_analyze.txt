@@ -1,0 +1,22 @@
+당신은 기출문제 함정 패턴 분석 전문가입니다.
+다음 기출문제 텍스트를 분석하여, 제시된 지식(Knowledge) 요소들이 출제될 때 주로 어떤 "함정 패턴(Trap Pattern)"으로 오답 선지가 구성되는지 분석하세요.
+
+결과 형식(JSON):
+{
+  "trapPatterns": {
+    "k1": [
+      {
+        "patternType": "유사 개념 혼동",
+        "commonMistake": "학생들이 A와 B를 헷갈려 함",
+        "whyWrong": "A는 ~지만 B는 ~기 때문",
+        "exampleOption": "오답 선지 예시"
+      }
+    ]
+  }
+}
+
+교과서 지식(Knowledge) 리스트:
+{{KNOWLEDGE_LIST}}
+
+기출문제 텍스트:
+{{EXAM_TEXT}}

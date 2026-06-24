@@ -19,6 +19,8 @@ program
   .requiredOption('-e, --exams <paths...>', 'Paths to past exam PDF files')
   .option('-c, --count <number>', 'Number of questions to generate', '1')
   .option('--traps <traps...>', 'Specific trap patterns to apply', [])
+  .option('-d, --difficulty <level>', 'Difficulty level: LOW, MIDDLE, HIGH, SUPER', 'MIDDLE')
+  .option('--types <types...>', 'Question types: single_selection, combination_judgment, blank_workflow, direct_statement')
   .option('-o, --out <path>', 'Path to save output JSON file', 'result.json')
   .action(async (options) => {
     try {
@@ -52,7 +54,9 @@ program
         knowledge,
         patterns,
         applyTraps: options.traps,
-        count: parseInt(options.count, 10)
+        count: parseInt(options.count, 10),
+        difficulty: options.difficulty || 'MIDDLE',
+        itemTypes: options.types?.length > 0 ? options.types : undefined,
       });
 
       const outPath = path.resolve(options.out);
